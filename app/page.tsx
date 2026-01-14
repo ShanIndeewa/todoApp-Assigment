@@ -150,7 +150,10 @@ function Dashboard() {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => authClient.signOut({ callbackURL: "/login" })}
+              onClick={async () => {
+                await authClient.signOut();
+                router.push("/login");
+              }}
             >
               Sign Out
             </Button>
