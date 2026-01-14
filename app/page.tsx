@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+
 const queryClient = new QueryClient();
 
 export default function Page() {
@@ -44,7 +45,7 @@ function Dashboard() {
   }, [session, isAuthPending, router]);
 
 
-  
+
   // Fetch todos
   const { data: todos, isLoading } = useQuery({
     queryKey: ['todos'],
@@ -125,9 +126,10 @@ function Dashboard() {
   if (isAuthPending) return <div className="p-10 text-center">Checking User...</div>;
   if (!session) return <div className="p-10 text-center">Redirecting to Login...</div>;
 
-  const isUser = session.user.role === 'user';
-  const isManager = session.user.role === 'manager';
-  const isAdmin = session.user.role === 'admin';
+  const userRole = (session.user as any).role as 'user' | 'manager' | 'admin';
+  const isUser = userRole === 'user';
+  const isManager = userRole === 'manager';
+  const isAdmin = userRole === 'admin';
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
@@ -143,7 +145,7 @@ function Dashboard() {
           </div>
           <div className="text-right flex flex-col items-end gap-2">
             <Badge variant={isAdmin ? "destructive" : isManager ? "secondary" : "default"}>
-              {session.user.role.toUpperCase()}
+              {(session.user as any).role.toUpperCase()}
             </Badge>
             <Button 
               variant="outline" 
